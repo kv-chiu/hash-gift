@@ -11,11 +11,11 @@ Web3 链上去中心化口令红包，采用 ECDSA 签名实现防抢跑 (Anti-M
 ## 快速开始
 
 ```bash
-# 1. 启动本地测试网
-cd contracts && anvil
+# 1. 安装合约依赖 + 启动本地测试网
+cd contracts && forge install && anvil
 
 # 2. 部署合约 (新终端)
-forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast
+cd contracts && forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast
 
 # 3. 启动前端 (新终端)
 cd frontend && pnpm install && pnpm dev
