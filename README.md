@@ -6,7 +6,7 @@ Web3 链上去中心化口令红包，采用 ECDSA 签名实现防抢跑 (Anti-M
 
 |          发红包           |            领红包            |
 | :-----------------------: | :--------------------------: |
-| ![发红包](asset/send.png) | ![领红包](asset/receive.png) |
+| ![发红包](assets/send.png) | ![领红包](assets/receive.png) |
 
 ## 快速开始
 
