@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useSyncExternalStore } from 'react'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useConnection, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { parseEther, keccak256, encodePacked } from 'viem'
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts'
 import { HASH_GIFT_ABI, HASH_GIFT_ADDRESS } from '@/lib/contract'
@@ -13,7 +13,7 @@ interface ShareData {
 }
 
 export function CreatePacket() {
-  const { address, isConnected } = useAccount()
+  const { address, isConnected } = useConnection()
   const [amount, setAmount] = useState('')
   const [count, setCount] = useState('1')
   const [duration, setDuration] = useState('86400') // 1天
@@ -27,7 +27,7 @@ export function CreatePacket() {
     () => false            // getServerSnapshot: server returns false
   )
 
-  const { writeContract, data: hash, isPending, error } = useWriteContract()
+  const { mutate, data: hash, isPending, error } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   const handleCreate = async () => {
@@ -43,7 +43,7 @@ export function CreatePacket() {
       [address, BigInt(Date.now()), BigInt(Math.random() * 1e18)]
     ))
 
-    writeContract({
+    mutate({
       address: HASH_GIFT_ADDRESS,
       abi: HASH_GIFT_ABI,
       functionName: 'createPacket',
