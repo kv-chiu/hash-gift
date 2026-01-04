@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { parseEther, keccak256, toHex, encodePacked } from 'viem'
+import { parseEther, keccak256, encodePacked } from 'viem'
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts'
 import { HASH_GIFT_ABI, HASH_GIFT_ADDRESS } from '@/lib/contract'
 
@@ -19,6 +19,13 @@ export function CreatePacket() {
   const [duration, setDuration] = useState('86400') // 1天
   const [isRandom, setIsRandom] = useState(false)
   const [shareData, setShareData] = useState<ShareData | null>(null)
+
+  // 使用 useSyncExternalStore 确保 hydration 安全，避免 SSR/CSR 不匹配
+  const mounted = useSyncExternalStore(
+    () => () => {},        // subscribe: no-op
+    () => true,            // getSnapshot: client returns true
+    () => false            // getServerSnapshot: server returns false
+  )
 
   const { writeContract, data: hash, isPending, error } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
@@ -56,6 +63,15 @@ export function CreatePacket() {
   const shareUrl = shareData 
     ? `${typeof window !== 'undefined' ? window.location.origin : ''}/claim?p=${shareData.packetId}&k=${shareData.privateKey.slice(2)}`
     : ''
+
+  // 避免 hydration 不匹配：在客户端挂载之前显示加载状态
+  if (!mounted) {
+    return (
+      <div className="text-center text-gray-400 py-8">
+        加载中...
+      </div>
+    )
+  }
 
   if (!isConnected) {
     return (
