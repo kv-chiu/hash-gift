@@ -1,5 +1,19 @@
 import { http, createConfig } from 'wagmi'
-import { mainnet, sepolia, localhost } from 'wagmi/chains'
+import { mainnet, sepolia, localhost, type Chain } from 'wagmi/chains'
+
+// Mantle Sepolia 测试网配置
+const mantleSepolia = {
+  id: 5003,
+  name: 'Mantle Sepolia Testnet',
+  nativeCurrency: { name: 'MNT', symbol: 'MNT', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://rpc.sepolia.mantle.xyz'] },
+  },
+  blockExplorers: {
+    default: { name: 'Mantle Sepolia Explorer', url: 'https://sepolia.mantlescan.xyz' },
+  },
+  testnet: true,
+} as const satisfies Chain
 
 // 本地测试网配置
 const anvil = {
@@ -13,8 +27,9 @@ const anvil = {
 } as const
 
 export const config = createConfig({
-  chains: [anvil, sepolia, mainnet],
+  chains: [mantleSepolia, anvil, sepolia, mainnet],
   transports: {
+    [mantleSepolia.id]: http(),
     [anvil.id]: http(),
     [sepolia.id]: http(),
     [mainnet.id]: http(),

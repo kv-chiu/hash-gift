@@ -84,5 +84,5 @@ export const HASH_GIFT_ABI = [
   }
 ] as const
 
-// 部署后更新此地址
-export const HASH_GIFT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3' as const
+// Mantle Sepolia Testnet 合约地址
+export const HASH_GIFT_ADDRESS = '0x235F4F52f8283eBE9B63ADB052d2b8B15C0331B4' as const
